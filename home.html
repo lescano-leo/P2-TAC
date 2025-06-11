@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mini Twitter - Home">
+    <title>Home - Mini Twitter</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="home.html" class="nav-logo">
+                    <i class="fas fa-feather-alt"></i>
+                    Mini Twitter
+                </a>
+                <div class="nav-menu">
+                    <a href="profile.html" class="nav-link">
+                        <i class="fas fa-user"></i>
+                        Perfil
+                    </a>
+                    <button id="logoutBtn" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="content-wrapper">
+            <div class="post-form-container">
+                <form id="postForm" class="post-form">
+                    <div class="form-group">
+                        <textarea id="postContent" class="form-control" placeholder="O que está acontecendo?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Postar
+                    </button>
+                </form>
+            </div>
+
+            <div id="postsList" class="posts-list">
+                <!-- Posts will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module">
+        import PostController from './js/controllers/postController.js';
+        import AuthController from './js/controllers/authController.js';
+        import { storage } from './js/repositories/storage.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new PostController();
+            new AuthController();
+
+            // Configura o botão de logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    storage.clearUserData();
+                    window.location.href = 'login.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mini Twitter - Feed">
+    <title>Feed - Mini Twitter</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .feed-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .post-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post-form textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        .post-form textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .post-form .char-count {
+            text-align: right;
+            color: var(--text-color);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .post-form .char-count.warning {
+            color: var(--warning-color);
+        }
+
+        .post-form .char-count.error {
+            color: var(--error-color);
+        }
+
+        .post-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-form button:hover {
+            background-color: #1991DA;
+        }
+
+        .post-form button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-author {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .post-date {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .post-actions button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .post-actions button:hover {
+            color: var(--primary-color);
+        }
+
+        .post-actions button.liked {
+            color: var(--error-color);
+        }
+
+        .post-comments {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comment {
+            padding: 10px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            background-color: var(--error-color);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .no-posts i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="feed.html" class="logo">
+                <i class="fab fa-twitter"></i>
+                Mini Twitter
+            </a>
+            <div class="nav-links">
+                <a href="feed.html" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    Feed
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    Perfil
+                </a>
+                <button id="logoutBtn" class="btn btn-danger">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sair
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="feed-container">
+            <form id="postForm" class="post-form">
+                <textarea 
+                    id="postContent"
+                    placeholder="O que está acontecendo?" 
+                    maxlength="280"
+                    required
+                ></textarea>
+                <div class="char-count">280 caracteres restantes</div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Publicar
+                </button>
+            </form>
+
+            <div id="postsContainer" class="posts-container">
+                <!-- Posts serão inseridos aqui via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { PostController } from './js/controllers/postController.js';
+        import { Storage } from './js/repositories/storage.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verifica se o usuário está autenticado
+            const token = Storage.getToken();
+            if (!token) {
+                window.location.replace('login.html');
+                return;
+            }
+
+            // Inicializa o controlador de posts
+            new PostController();
+
+            // Configura o botão de logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    Storage.clear();
+                    window.location.replace('login.html');
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
